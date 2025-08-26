@@ -21,20 +21,20 @@ def gh_api(args, input_json=None, input_file=None):
     return json.loads(p.stdout.decode() or "{}")
 
 def create_issue(title, body, labels):
-    args = ["-X","POST", f"/repos/{REPO}/issues", "-F", f"title={title}"]
-    with tempfile.NamedTemporaryFile("w+", delete=False) as tf:
-        tf.write(body or "")
-        tf.flush()
-        for lab in labels or []:
-            args += ["-F", f"labels[]={lab}"]
-        data = gh_api(args, input_file=tf.name)
+    # Use form data approach which is more reliable with gh CLI
+    args = ["-X", "POST", f"/repos/{REPO}/issues", "-f", f"title={title}"]
+    if body:
+        args += ["-f", f"body={body}"]
+    if labels:
+        for label in labels:
+            args += ["-f", f"labels[]={label}"]
+    data = gh_api(args)
     return {"number": data["number"], "url": data["html_url"]}
 
 def edit_issue(number, body):
-    with tempfile.NamedTemporaryFile("w+", delete=False) as tf:
-        tf.write(body or "")
-        tf.flush()
-        gh_api(["-X","PATCH", f"/repos/{REPO}/issues/{number}"], input_file=tf.name)
+    # Use form data approach for consistency
+    args = ["-X", "PATCH", f"/repos/{REPO}/issues/{number}", "-f", f"body={body or ''}"]
+    gh_api(args)
 
 def add_to_project(issue_url):
     if not (PROJECT_OWNER and PROJECT_NUMBER):

@@ -1,0 +1,6 @@
+fastapi
+uvicorn[standard]
+motor
+pydantic
+aio-pika
+jinja2

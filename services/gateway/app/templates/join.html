@@ -1,0 +1,16 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><title>Join - {{ slug }}</title></head>
+<body>
+  <h2>Join {{ slug }}</h2>
+  <p>Placeholder join form (wire to waitlist-svc via gateway in later tasks).</p>
+  <div id="events"></div>
+  <script>
+    const es = new EventSource("/public/demo-list/stream");
+    es.onmessage = ev => {
+      const d = JSON.parse(ev.data);
+      const p = document.createElement("pre");
+      p.textContent = JSON.stringify(d, null, 2);
+      document.getElementById("events").prepend(p);
+    };
+  </script>
+</body></html>

@@ -1,0 +1,48 @@
+# QueueBoard backlog (shortened skeleton). Replace with your full version if needed.
+epics:
+  - id: epic-foundation
+    title: "EPIC: Foundation & DevOps"
+    labels: ["epic","priority:P1"]
+    body: "Repo bootstrap, Docker Compose, CI, env config."
+  - id: epic-waitlist
+    title: "EPIC: waitlist-svc (core queue API)"
+    labels: ["epic","priority:P1"]
+    body: "Join, list, reorder, status transitions, events."
+  - id: epic-gateway
+    title: "EPIC: gateway (public API + SSE/WebSocket)"
+    labels: ["epic","priority:P1"]
+    body: "Public endpoints, QR join, live updates."
+  - id: epic-notify
+    title: "EPIC: notify-svc (Telegram)"
+    labels: ["epic","priority:P1"]
+    body: "Telegram delivery and templates."
+  - id: epic-estimate
+    title: "EPIC: estimate-svc (ETA engine)"
+    labels: ["epic","priority:P2"]
+    body: "ETA model updates on queue changes."
+
+issues:
+  - parent: epic-foundation
+    title: "Bootstrap monorepo + Docker Compose baseline"
+    labels: ["type:chore","priority:P1"]
+    body: "compose with mongo, rabbitmq, gateway + waitlist-svc"
+
+  - parent: epic-foundation
+    title: "CI: lint & tests in GitHub Actions"
+    labels: ["type:chore","priority:P1"]
+    body: "ruff, black --check, mypy, pytest"
+
+  - parent: epic-waitlist
+    title: "waitlist-svc: POST /join and events"
+    labels: ["type:feature","priority:P1"]
+    body: "Create entry; emit waitlist.joined"
+
+  - parent: epic-gateway
+    title: "Gateway: SSE stream of waitlist.updated"
+    labels: ["type:feature","priority:P1"]
+    body: "Bridge MQ → clients"
+
+  - parent: epic-notify
+    title: "notify-svc: consume notify.send → Telegram"
+    labels: ["type:feature","priority:P1"]
+    body: "HTTP call to Telegram Bot API"

@@ -1,0 +1,45 @@
+version: "3.9"
+services:
+  mongo:
+    image: mongo:6
+    ports: ["27017:27017"]
+    volumes: ["mongo_data:/data/db"]
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports: ["5672:5672","15672:15672"]
+
+  gateway:
+    build: ./services/gateway
+    environment:
+      MONGO_URL: ${MONGO_URL}
+      BROKER_URL: ${BROKER_URL}
+      PUBLIC_BASE_URL: ${PUBLIC_BASE_URL}
+    depends_on: [mongo, rabbitmq]
+    ports: ["8080:8000"]
+
+  waitlist-svc:
+    build: ./services/waitlist-svc
+    environment:
+      MONGO_URL: ${MONGO_URL}
+      BROKER_URL: ${BROKER_URL}
+    depends_on: [mongo, rabbitmq]
+    ports: ["8001:8000"]
+
+  notify-svc:
+    build: ./services/notify-svc
+    environment:
+      BROKER_URL: ${BROKER_URL}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+    depends_on: [rabbitmq]
+
+  estimate-svc:
+    build: ./services/estimate-svc
+    environment:
+      MONGO_URL: ${MONGO_URL}
+      BROKER_URL: ${BROKER_URL}
+      DEFAULT_TZ: ${DEFAULT_TZ}
+    depends_on: [mongo, rabbitmq]
+
+volumes:
+  mongo_data:

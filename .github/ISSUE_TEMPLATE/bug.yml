@@ -1,0 +1,17 @@
+name: Bug
+description: Something isn’t working
+labels: ["type:bug", "P2"]
+body:
+  - type: input
+    id: summary
+    attributes: { label: Summary }
+    validations: { required: true }
+  - type: textarea
+    id: steps
+    attributes: { label: Steps to reproduce, placeholder: "1)… 2)…" }
+  - type: textarea
+    id: expected
+    attributes: { label: Expected, placeholder: "What you expected to happen" }
+  - type: textarea
+    id: actual
+    attributes: { label: Actual, placeholder: "What actually happened" }
